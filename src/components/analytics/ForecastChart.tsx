@@ -100,6 +100,13 @@ export function ForecastChart() {
     fetchForecast();
   }, [user]);
 
+  const TrendIcon = trend === 'improving' ? TrendingUp : trend === 'worsening' ? TrendingDown : Minus;
+  const trendColor = trend === 'improving' ? 'text-emerald-400' : trend === 'worsening' ? 'text-red-400' : 'text-slate-400';
+
+  const hasData = useMemo(() => {
+    return data.length > 0;
+  }, [data.length]);
+
   if (isLoading) {
     return (
       <section className="bg-slate-900/60 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-6" aria-label="Forecast loading">
@@ -110,13 +117,6 @@ export function ForecastChart() {
       </section>
     );
   }
-
-  const TrendIcon = trend === 'improving' ? TrendingUp : trend === 'worsening' ? TrendingDown : Minus;
-  const trendColor = trend === 'improving' ? 'text-emerald-400' : trend === 'worsening' ? 'text-red-400' : 'text-slate-400';
-
-  const forecastMemo = useMemo(() => {
-    return data.length > 0;
-  }, [data.length]);
 
   return (
     <section className="bg-slate-900/60 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-6" aria-label="7-day carbon emissions forecast">
@@ -129,7 +129,7 @@ export function ForecastChart() {
         </div>
       </div>
 
-      {forecastMemo && data.length > 0 ? (
+      {hasData && data.length > 0 ? (
         <div className="h-64" role="img" aria-label={`7-day carbon forecast chart showing ${trend} trend`}>
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={data}>

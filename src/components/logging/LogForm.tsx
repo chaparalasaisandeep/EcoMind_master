@@ -4,7 +4,7 @@
  * Security: Input validation, XSS prevention, CSRF-safe via Supabase auth.
  */
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useCarbonLogs } from '../../hooks/useCarbonLogs';
 import { supabase } from '../../lib/supabase';
@@ -38,13 +38,13 @@ export function LogForm() {
   });
 
   // Load categories on mount
-  useState(() => {
+  useEffect(() => {
     const loadCategories = async () => {
       const { data } = await supabase.from('categories').select('id, name, display_name');
       if (data) setCategories(data as Category[]);
     };
     loadCategories();
-  });
+  }, []);
 
   const loadFactors = useCallback(async (categoryId: string) => {
     const { data } = await supabase
